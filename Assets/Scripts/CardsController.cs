@@ -46,7 +46,7 @@ public class CardsController : MonoBehaviour
             newCard.SelectIconSprite(spritePairs[i]);
             newCard.gameObject.name = "Card_" + i;
             newCard.cardsController = this;
-         //   newCard.ShowIcon();
+            newCard.ShowIcon();
         }
     }
 
