@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8418fdc64b714bf46b5e3b95c3004df0
+guid: 10713e532d2d90b40b30fbc7e1a02962
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -72,7 +72,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
@@ -117,22 +117,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: button_0
+      name: Picture match_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 628
-        width: 2048
-        height: 792
+        x: 12
+        y: 201
+        width: 1009
+        height: 617
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 89430718ba103dc4fbe6df243b21b2bb
-      internalID: -1925849701
+      spriteID: 4c67bb5c16b791044a5174233c0e8dbf
+      internalID: 1585760370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Picture match_10
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 0
+        width: 1017
+        height: 775
+      alignment: 9
+      pivot: {x: 0.5017361, y: 0.5}
+      border: {x: 0, y: 204, z: 0, w: 571}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19c5a285e13ddb548ac902ed0d30676f
+      internalID: 1401436627
       vertices: []
       indices: 
       edges: []
@@ -148,7 +169,17 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      button_0: -1925849701
+      Picture match_1: -1912980448
+      Picture match_0: 1585760370
+      Picture match_6: -1418710499
+      Picture match_3: -675096065
+      Picture match_5: -2013397472
+      Picture match_8: -937588845
+      Picture match_2: -1691237262
+      Picture match_7: 445672214
+      Picture match_4: -96593136
+      Picture match_10: 1401436627
+      Picture match_9: 1229676551
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

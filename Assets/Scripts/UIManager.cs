@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    // Start is called before the first frame updatepublic static UIManager Instance;
     public static UIManager Instance;
+
     [Header("Score UI")]
     public TMP_Text scoreText;//players current score
     public TMP_Text highScoreText; //high score of all time
@@ -46,7 +44,13 @@ public class UIManager : MonoBehaviour
         if (winPanel != null)
             winPanel.SetActive(show);
 
-       
+        if (show)
+        {
+            if (winScoreText != null)
+                winScoreText.text = $"Score: {PlayerData.Instance.score}";
+            if (winHighScoreText != null)
+                winHighScoreText.text = $"High Score: {PlayerData.Instance.highScore}";
+        }
     }
 
     public void ShowGameOverPanel(bool show) // show game over panel 
@@ -54,7 +58,13 @@ public class UIManager : MonoBehaviour
         if (gameOverPanel != null)
             gameOverPanel.SetActive(show);
 
-       
+        if (show)
+        {
+            if (gameOverScoreText != null)
+                gameOverScoreText.text = $"Score: {PlayerData.Instance.score}";
+            if (gameOverHighScoreText != null)
+                gameOverHighScoreText.text = $"High Score: {PlayerData.Instance.highScore}";
+        }
     }
 
     public void UpdateTimerUI(float timeLeft)//update gameplay time left

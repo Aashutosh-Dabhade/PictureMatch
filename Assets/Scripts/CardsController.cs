@@ -4,26 +4,60 @@ using UnityEngine;
 
 public class CardsController : MonoBehaviour
 {
-    [SerializeField] Sprite[] sprites;
-    private List<Sprite> spritePairs;
+    public enum Difficulty { Easy, Medium, Hard }
+
+    [SerializeField] private Difficulty gameDifficulty = Difficulty.Easy;
+    [SerializeField] private int easyPairs = 4;
+    [SerializeField] private int mediumPairs = 8;
+    [SerializeField] private int hardPairs = 12;
+    private int pairsToMatch;
+
     [SerializeField] Card cardPrefab;
     [SerializeField] public Transform cardParent;
-
+    [SerializeField] private Sprite[] sprites;
+    private List<Sprite> spritePairs;
     Card firstSelected;
     Card SecondSelected;
     int matchCount;
-    
+
     void Start()
     {
+        PlayerData.Instance.ResetScore(); // reset score to zero
+        PlayerData.Instance.LoadHighScore(); // load high score from playerprefs
+        UIManager.Instance.UpdateScoreUI(PlayerData.Instance.score, PlayerData.Instance.highScore); 
         PrepareSprites();
         CreateCards();
     }
-    public void PrepareSprites()
+
+    public void CreateCards() //create cards and pairs from card prefabs
+    {
+        for (int i = 0; i < spritePairs.Count; i++)
+        {
+            Card newCard = Instantiate(cardPrefab, cardParent);
+            newCard.SelectIconSprite(spritePairs[i]);
+            newCard.cardsController = this;
+            newCard.gameObject.name = "Card_" + i;
+            newCard.ShowIcon();
+        }
+    }
+
+    public void PrepareSprites()  //based on difficulty level load no of cards pair-from enum
     {
         spritePairs = new List<Sprite>();
-       
+        switch (gameDifficulty)
+        {
+            case Difficulty.Easy:
+                pairsToMatch = easyPairs;
+                break;
+            case Difficulty.Medium:
+                pairsToMatch = mediumPairs;
+                break;
+            case Difficulty.Hard:
+                pairsToMatch = hardPairs;
+                break;
+        }
 
-        for (int i = 0; i<sprites.Length; i++)
+        for (int i = 0; i < pairsToMatch; i++)
         {
             spritePairs.Add(sprites[i]);
             spritePairs.Add(sprites[i]);
@@ -38,24 +72,12 @@ public class CardsController : MonoBehaviour
         }
     }
 
-    public void CreateCards() 
-    {
-        for (int i = 0; i < spritePairs.Count; i++)
-        {
-            Card newCard = Instantiate(cardPrefab, cardParent);
-            newCard.SelectIconSprite(spritePairs[i]);
-            newCard.gameObject.name = "Card_" + i;
-            newCard.cardsController = this;
-            newCard.ShowIcon();
-        }
-    }
-
-public void SetSelected(Card card) //select and show clicked icon and check if its matching
+    public void SetSelected(Card card) //select and show clicked icon and check if its matching
     {
         if (card.isSelected)
         {
             card.ShowIcon();
-            
+
             if (firstSelected == null)
             {
                 firstSelected = card;
@@ -71,22 +93,24 @@ public void SetSelected(Card card) //select and show clicked icon and check if i
         }
     }
 
-     IEnumerator CheckMAtching(Card a, Card b) //check if first and second selected card is matching
+    IEnumerator CheckMAtching(Card a, Card b) //check if first and second selected card is matching
     {
         yield return new WaitForSeconds(0.3f);
         if (a.IconSprite == b.IconSprite)
         {
             matchCount++;
+            PlayerData.Instance.AddScore(10);
+            UIManager.Instance.UpdateScoreUI(PlayerData.Instance.score, PlayerData.Instance.highScore);
+
+
             a.SetInteractable(false);
             b.SetInteractable(false);
 
             if (matchCount >= spritePairs.Count / 2)
             {
-                Debug.Log("All cards matched!");
-            }
-            else
-            {
-                Debug.Log("Matched: " + matchCount);
+
+                UIManager.Instance.ShowWinPanel(true);
+                Timer.instance.StopTimer();
             }
         }
         else
@@ -95,9 +119,47 @@ public void SetSelected(Card card) //select and show clicked icon and check if i
             b.HideIcon();
         }
     }
-    // Update is called once per frame
-    void Update()
+
+    public void GameOverEvent()
     {
-        
+
+        UIManager.Instance.ShowGameOverPanel(true);
+        Timer.instance.StopTimer();
+    }
+
+    public void RestartGame() // restart game at current level.set slider and timer to zero
+    {
+        foreach (Transform child in cardParent)
+        {
+            Destroy(child.gameObject);
+        }
+        Timer.instance.StopTimer();
+        matchCount = 0;
+        firstSelected = null;
+        SecondSelected = null;
+        UIManager.Instance.ShowWinPanel(false);
+        UIManager.Instance.ShowGameOverPanel(false);
+
+        PlayerData.Instance.ResetScore();
+        UIManager.Instance.UpdateScoreUI(PlayerData.Instance.score, PlayerData.Instance.highScore);
+
+        PrepareSprites();
+        CreateCards();
+        Timer.instance.SetTimer();
+    }
+
+    public void SetDifficulty(Difficulty difficulty) 
+    {
+        gameDifficulty = difficulty;
+    }
+    public void SetDifficulty(int difficulty) // for setting difficulty from button
+    {
+        gameDifficulty = (Difficulty)difficulty;
+        RestartGame();
+    }
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
+

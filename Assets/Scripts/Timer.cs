@@ -1,24 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using TMPro;
 
 public class Timer : MonoBehaviour
 {
     public static Timer instance;
     public float showAllDuration = 5f;      // time to preview all cards for 5 sec
     public float playDuration = 30f;        // gameplay time
-    public TMP_Text timerText;              // to show remaining time 
-    public TMP_Text showAllText;            // show memorize text and preview timer
-    public Slider timerSlider;              // Slider for timer display
+     TMP_Text timerText;              // to show remaining time 
+     TMP_Text showAllText;            // show memorize text and preview timer
+     Slider timerSlider;              // Slider for timer display
     public CardsController cardsController; 
 
     private float currentTime;
     private bool isPlaying = false;
     private float gameplayTimeLeft = 0f;
-    // Start is called before the first frame update
-   void Start()
+
+    void Start()
     {
         instance = this;
         SetTimer();
@@ -26,34 +25,30 @@ public class Timer : MonoBehaviour
 
     public void SetTimer()
     { 
-        if (showAllText != null)
-            showAllText.gameObject.SetActive(true); // Showing memorize text at start
+        if (UIManager.Instance.showAllText != null)
+            UIManager.Instance.showAllText.gameObject.SetActive(true); // Showing memorize text at start
         StartCoroutine(ShowAllCardsRoutine());
     }
 
     IEnumerator ShowAllCardsRoutine()
     {
         // disabling card interactions while preview
-
         foreach (Transform card in cardsController.cardParent)
         {
             Card c = card.GetComponent<Card>();
             c.SetInteractable(false);
             c.ShowIcon();
-            
-
         }
 
         currentTime = showAllDuration;
- 
-       UpdateShowAllUI(currentTime);
+        UIManager.Instance.SetShowAllTextActive(true);
+        UIManager.Instance.UpdateShowAllUI(currentTime);
 
         while (currentTime > 0)
         {
             yield return new WaitForSeconds(1f);
             currentTime--;
-            UpdateShowAllUI(currentTime);
-
+            UIManager.Instance.UpdateShowAllUI(currentTime);
         }
 
         // hiding all cards and enabling card interactions
@@ -64,15 +59,15 @@ public class Timer : MonoBehaviour
             c.SetInteractable(true);
         }
 
-       
+        UIManager.Instance.SetShowAllTextActive(false);
 
         // starting gameplay timer
         isPlaying = true;
         currentTime = playDuration;
-        if (timerSlider != null)
+        if (UIManager.Instance.timerSlider != null)
         {
-            timerSlider.maxValue = playDuration;
-            timerSlider.value = playDuration;
+            UIManager.Instance.timerSlider.maxValue = playDuration;
+            UIManager.Instance.timerSlider.value = playDuration;
         }
         StartCoroutine(GameplayTimerRoutine());
     }
@@ -89,23 +84,19 @@ public class Timer : MonoBehaviour
         }
 
         isPlaying = false;
-
+        cardsController.GameOverEvent();
     }
 
     void UpdateTimerUI()
     {
-        if (timerText != null)
-            timerText.text = Mathf.Ceil(gameplayTimeLeft).ToString();
+        if (UIManager.Instance.timerText != null)
+            UIManager.Instance.timerText.text = Mathf.Ceil(gameplayTimeLeft).ToString();
 
-        if (timerSlider != null)
-            timerSlider.value = gameplayTimeLeft;
+        if (UIManager.Instance.timerSlider != null)
+            UIManager.Instance.timerSlider.value = gameplayTimeLeft;
     }
 
- public void UpdateShowAllUI(float showAllTime)// update preview timer
-    {
-        if (showAllText != null)
-            showAllText.text = "Memorize: " + Mathf.Ceil(showAllTime).ToString();
-    }
+
     public void StopTimer()// stop and reset timer to zero
     {
         StopAllCoroutines();
@@ -118,9 +109,9 @@ public class Timer : MonoBehaviour
     void Update()
     {
         // update to smoothen slider value 
-        if (isPlaying && timerSlider != null)
+        if (isPlaying && UIManager.Instance.timerSlider != null)
         {
-            timerSlider.value = gameplayTimeLeft;
+            UIManager.Instance.timerSlider.value = gameplayTimeLeft;
         }
     }
 }
