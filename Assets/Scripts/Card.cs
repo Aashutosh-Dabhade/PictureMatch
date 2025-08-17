@@ -9,7 +9,7 @@ public class Card : MonoBehaviour
     public Sprite hiddenIconSprite; //sprite to card icon. in this case shield icon
     public Sprite IconSprite;  //random sprite to be assigned here.
     public bool isSelected = false;
-    
+    public CardsController cardsController; //reference to the CardsController script
     void Start()
     {
         
@@ -23,6 +23,7 @@ public class Card : MonoBehaviour
         else
         {
             ShowIcon();
+            cardsController.SetSelected(this);
           
         }
     }
