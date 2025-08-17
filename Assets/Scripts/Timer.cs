@@ -8,9 +8,9 @@ public class Timer : MonoBehaviour
     public static Timer instance;
     public float showAllDuration = 5f;      // time to preview all cards for 5 sec
     public float playDuration = 30f;        // gameplay time
-     TMP_Text timerText;              // to show remaining time 
-     TMP_Text showAllText;            // show memorize text and preview timer
-     Slider timerSlider;              // Slider for timer display
+    public TMP_Text timerText;              // to show remaining time 
+    public TMP_Text showAllText;            // show memorize text and preview timer
+    public Slider timerSlider;              // Slider for timer display
     public CardsController cardsController; 
 
     private float currentTime;
@@ -20,14 +20,14 @@ public class Timer : MonoBehaviour
     void Start()
     {
         instance = this;
-        SetTimer();
+       // SetTimer();
     }
 
     public void SetTimer()
     { 
-        if (UIManager.Instance.showAllText != null)
-            UIManager.Instance.showAllText.gameObject.SetActive(true); // Showing memorize text at start
-        StartCoroutine(ShowAllCardsRoutine());
+        if (showAllText != null)
+            showAllText.gameObject.SetActive(true); // Showing memorize text at start
+            StartCoroutine(ShowAllCardsRoutine());
     }
 
     IEnumerator ShowAllCardsRoutine()
@@ -64,10 +64,10 @@ public class Timer : MonoBehaviour
         // starting gameplay timer
         isPlaying = true;
         currentTime = playDuration;
-        if (UIManager.Instance.timerSlider != null)
+        if (timerSlider != null)
         {
-            UIManager.Instance.timerSlider.maxValue = playDuration;
-            UIManager.Instance.timerSlider.value = playDuration;
+            timerSlider.maxValue = playDuration;
+            timerSlider.value = playDuration;
         }
         StartCoroutine(GameplayTimerRoutine());
     }
@@ -89,11 +89,11 @@ public class Timer : MonoBehaviour
 
     void UpdateTimerUI()
     {
-        if (UIManager.Instance.timerText != null)
-            UIManager.Instance.timerText.text = Mathf.Ceil(gameplayTimeLeft).ToString();
+        if (timerText != null)
+            timerText.text = Mathf.Ceil(gameplayTimeLeft).ToString();
 
-        if (UIManager.Instance.timerSlider != null)
-            UIManager.Instance.timerSlider.value = gameplayTimeLeft;
+        if (timerSlider != null)
+            timerSlider.value = gameplayTimeLeft;
     }
 
 
@@ -109,9 +109,9 @@ public class Timer : MonoBehaviour
     void Update()
     {
         // update to smoothen slider value 
-        if (isPlaying && UIManager.Instance.timerSlider != null)
+        if (isPlaying && timerSlider != null)
         {
-            UIManager.Instance.timerSlider.value = gameplayTimeLeft;
+            timerSlider.value = gameplayTimeLeft;
         }
     }
 }

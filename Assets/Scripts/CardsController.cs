@@ -77,7 +77,7 @@ public class CardsController : MonoBehaviour
         if (card.isSelected)
         {
             card.ShowIcon();
-
+            AudioManager.Instance.PlayShowIcon();
             if (firstSelected == null)
             {
                 firstSelected = card;
@@ -102,13 +102,13 @@ public class CardsController : MonoBehaviour
             PlayerData.Instance.AddScore(10);
             UIManager.Instance.UpdateScoreUI(PlayerData.Instance.score, PlayerData.Instance.highScore);
 
-
+            AudioManager.Instance.PlayCardMatch();
             a.SetInteractable(false);
             b.SetInteractable(false);
 
             if (matchCount >= spritePairs.Count / 2)
             {
-
+                AudioManager.Instance.PlayWin();
                 UIManager.Instance.ShowWinPanel(true);
                 Timer.instance.StopTimer();
             }
@@ -122,7 +122,7 @@ public class CardsController : MonoBehaviour
 
     public void GameOverEvent()
     {
-
+        AudioManager.Instance.PlayGameOver();
         UIManager.Instance.ShowGameOverPanel(true);
         Timer.instance.StopTimer();
     }
@@ -150,10 +150,12 @@ public class CardsController : MonoBehaviour
 
     public void SetDifficulty(Difficulty difficulty) 
     {
+        Timer.instance.SetTimer();
         gameDifficulty = difficulty;
     }
     public void SetDifficulty(int difficulty) // for setting difficulty from button
     {
+        Timer.instance.SetTimer();
         gameDifficulty = (Difficulty)difficulty;
         RestartGame();
     }
